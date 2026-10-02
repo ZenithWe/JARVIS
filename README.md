@@ -1,6 +1,20 @@
 # JARVIS Personal Intelligence — 0.1.0
 
-Assistente pessoal para Windows, com interface futurista em português.
+Assistente pessoal para Windows, com interface futurista em português.\n\n![Interface do JARVIS](JARVIS-interface.png)
+
+## Download do executável
+
+O GitHub Actions compila automaticamente o JARVIS para **Windows 10/11 x64** a partir deste código.
+
+1. Abra a aba **Actions**.
+2. Entre em **Build JARVIS for Windows**.
+3. Abra a execução mais recente concluída com sucesso.
+4. Em **Artifacts**, baixe **JARVIS-Windows**.
+5. Extraia o artifact e abra `JARVIS.exe`.
+
+Para compilar no próprio PC, instale Go e execute `build-windows.ps1`.
+
+
 Esta é uma primeira versão funcional. Ela NÃO contém todas as capacidades do JARVIS fictício.
 
 ## Começar
