@@ -1,0 +1,49 @@
+name: Build JARVIS for Windows
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.1"
+          cache-dependency-path: codigo-fonte/go.mod
+
+      - name: Run tests
+        working-directory: codigo-fonte
+        run: go test ./...
+
+      - name: Build Windows executable
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Push-Location codigo-fonte
+          $env:GOOS = "windows"
+          $env:GOARCH = "amd64"
+          $env:CGO_ENABLED = "0"
+          go build -buildvcs=false -trimpath -ldflags="-s -w -H=windowsgui" -o ../dist/JARVIS.exe .
+          Pop-Location
+          (Get-FileHash dist/JARVIS.exe -Algorithm SHA256).Hash.ToLower() + "  JARVIS.exe" | Set-Content dist/SHA256.txt
+
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: JARVIS-Windows
+          path: |
+            dist/JARVIS.exe
+            dist/SHA256.txt
+          if-no-files-found: error
